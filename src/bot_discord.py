@@ -6,10 +6,9 @@ import requests
 
 def run():
     # with open("users.json", "r") as f: users = json.load(f)
-    users = {'MEMBERs': ['onsoim']}
 
     msg = {}
-    for m in users['MEMBERs']:
+    for m in config.USERS:
         info    = {}
         url     = f'{config.URL_API}?boj={m}'
         text    = requests.get(url).text
