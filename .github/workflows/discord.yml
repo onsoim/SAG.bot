@@ -1,0 +1,29 @@
+name: Today's Status
+
+on:
+  schedule:
+  - cron: "00 01 * * *"
+
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Install dependencies
+      run: |
+        pip3 install -r requirements.txt
+    - name: SAG bot
+      env:
+        DISCORD_CHANNEL_NAME: ${{ secrets.DISCORD_CHANNEL_NAME }}
+        DISCORD_GUILD_NAME: ${{ secrets.DISCORD_GUILD_NAME }}
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        URL_API: ${{ secrets.URL_API }}
+      run: |
+        python3 src/run.py
