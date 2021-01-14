@@ -5,7 +5,7 @@ import requests
 
 
 def run():
-    with open("users.json", "r") as f: users = json.load(f)
+    with open("res/users.json", "r") as f: users = json.load(f)
 
     msg = {}
     for m in users['ADMINs'] + users['MEMBERs']:
