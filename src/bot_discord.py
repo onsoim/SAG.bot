@@ -5,10 +5,10 @@ import requests
 
 
 def run():
-    # with open("users.json", "r") as f: users = json.load(f)
+    with open("users.json", "r") as f: users = json.load(f)
 
     msg = {}
-    for m in config.USERS:
+    for m in users['ADMINs'] + users['MEMBERs']:
         info    = {}
         url     = f'{config.URL_API}?boj={m}'
         text    = requests.get(url).text
