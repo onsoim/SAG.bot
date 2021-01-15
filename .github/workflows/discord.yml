@@ -2,7 +2,7 @@ name: Today's Status
 
 on:
   schedule:
-    - cron: '* * * * *'
+    - cron: '00 01 * * *'
 
   workflow_dispatch:
 
