@@ -18,7 +18,7 @@ def main():
         channel = client.get_channel(channel_id)
 
         import bot_discord
-        msg = bot_discord.run()
+        msg = f'```json\n{bot_discord.run()}\n```'
         print(msg)
 
         for index in range(0, len(msg), 2000):
