@@ -4,7 +4,18 @@ import json
 import requests
 
 
-def run():
+def simplified():
+    infos = json.loads(formatted())
+    msg   = []
+
+    for user in infos.keys():
+        info = infos[user]
+        msg += [ f"{user:11s} : {info['tier']:9s} ({int(info['solved']):3d})" ]
+
+    return '\n'.join(msg)
+
+
+def formatted():
     with open("res/users.json", "r") as f: users = json.load(f)
 
     msg = {}
@@ -19,10 +30,13 @@ def run():
         info['solved']  = soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text()
         info['exp']     = soup.select_one('svg > g:nth-child(8) > text.something.value').get_text()
         msg[m] = info
-    msg = json.dumps(msg, indent=4)
 
-    return msg
+    return json.dumps(msg, indent=4)
+
+
+def run():
+    return simplified()
 
 
 if __name__ == "__main__":
-    run()
+    print(run())
