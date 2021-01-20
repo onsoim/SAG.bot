@@ -10,7 +10,7 @@ def simplified():
 
     for user in infos.keys():
         info = infos[user]
-        msg += [ f"{user:11s} : {info['tier']:9s} ({int(info['solved']):3d})" ]
+        msg += [ f"{user:11s} : {info['tier']:9s} ({int(info['percentage']):02d}%)" ]
 
     return '\n'.join(msg)
 
@@ -24,11 +24,12 @@ def formatted():
         url     = f'{config.URL_API}?boj={m}'
         text    = requests.get(url).text
 
-        soup            = BeautifulSoup(text, 'html.parser')
-        info['tier']    = soup.select_one('svg > text.tier-text').get_text()
-        info['class']   = soup.select_one('svg > g:nth-child(6) > text.class.value').get_text()
-        info['solved']  = soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text()
-        info['exp']     = soup.select_one('svg > g:nth-child(8) > text.something.value').get_text()
+        soup                = BeautifulSoup(text, 'html.parser')
+        info['tier']        = soup.select_one('svg > text.tier-text').get_text()
+        info['class']       = soup.select_one('svg > g:nth-child(6) > text.class.value').get_text()
+        info['solved']      = soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text()
+        info['exp']         = soup.select_one('svg > g:nth-child(8) > text.something.value').get_text()
+        info['percentage']  = soup.select_one('svg > text.percentage').get_text()
         msg[m] = info
 
     return json.dumps(msg, indent=4)
