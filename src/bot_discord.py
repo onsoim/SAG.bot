@@ -5,7 +5,11 @@ import requests
 
 
 def simplified():
-    infos = json.loads(formatted())
+    infos = dict(sorted(
+        json.loads(formatted()).items(),
+        key = lambda user: user[1]['exp'],
+        reverse=True
+    ))
     msg   = []
 
     for user in infos.keys():
