@@ -10,7 +10,7 @@ def simplified():
 
     for user in infos.keys():
         info = infos[user]
-        msg += [ f"{user:11s} : {info['tier']:9s} ({int(info['percentage']):02d}%)" ]
+        msg += [ f"{user:11s} : {info['tier']:9s} ({info['percentage']})" ]
 
     return '\n'.join(msg)
 
