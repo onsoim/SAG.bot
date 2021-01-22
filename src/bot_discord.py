@@ -10,7 +10,7 @@ def simplified():
 
     for user in infos.keys():
         info = infos[user]
-        msg += [ f"{user:11s} : {info['tier']:9s} {info['solved']} ({info['percentage']})" ]
+        msg += [ f"{user:11s} : {info['tier']:9s} {info['solved']:3d} ({info['percentage']:2d}%)" ]
 
     return '\n'.join(msg)
 
@@ -27,9 +27,9 @@ def formatted():
         soup                = BeautifulSoup(text, 'html.parser')
         info['tier']        = soup.select_one('svg > text.tier-text').get_text()
         info['class']       = soup.select_one('svg > g:nth-child(6) > text.class.value').get_text()
-        info['solved']      = soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text()
-        info['exp']         = soup.select_one('svg > g:nth-child(8) > text.something.value').get_text()
-        info['percentage']  = soup.select_one('svg > text.percentage').get_text()
+        info['solved']      = int(soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text())
+        info['exp']         = int(soup.select_one('svg > g:nth-child(8) > text.something.value').get_text().replace(',', ''))
+        info['percentage']  = int(soup.select_one('svg > text.percentage').get_text()[ : -1 ])
         msg[m] = info
 
     return json.dumps(msg, indent=4)
