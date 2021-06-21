@@ -4,6 +4,9 @@ import json
 import requests
 
 
+ERROR_USERS = []
+
+
 def simplified():
     infos = dict(sorted(
         json.loads(formatted()).items(),
@@ -16,25 +19,30 @@ def simplified():
         info = infos[user]
         msg += [ f"{user:11s} : {info['tier']:9s} ({info['percentage']:02d}%) {info['solved']:3d}" ]
 
-    return '\n'.join(msg)
+    return '\n'.join(msg) + f'\n[*] An Error Occured on "{", ".join(ERROR_USERS)}"'
 
 
 def formatted():
+    global ERROR_USERS
+    
     with open("res/users.json", "r") as f: users = json.load(f)
 
     msg = {}
     for m in users['ADMINs'] + users['MEMBERs']:
         info    = {}
         url     = f'{config.URL_API}?boj={m}'
-        text    = requests.get(url).text
+        res     = requests.get(url)
 
-        soup                = BeautifulSoup(text, 'html.parser')
-        info['tier']        = soup.select_one('svg > text.tier-text').get_text()
-        info['rate']        = int(soup.select_one('svg > g:nth-child(6) > text.rate.value').get_text().replace(',', ''))
-        info['solved']      = int(soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text())
-        info['class']       = soup.select_one('svg > g:nth-child(8) > text.class.value').get_text()
-        info['percentage']  = int(soup.select_one('svg > text.percentage').get_text()[ : -1 ])
-        msg[m] = info
+        if res.status_code == 200:
+            soup                = BeautifulSoup(res.text, 'html.parser')
+            info['tier']        = soup.select_one('svg > text.tier-text').get_text()
+            info['rate']        = int(soup.select_one('svg > g:nth-child(6) > text.rate.value').get_text().replace(',', ''))
+            info['solved']      = int(soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text())
+            info['class']       = soup.select_one('svg > g:nth-child(8) > text.class.value').get_text()
+            info['percentage']  = int(soup.select_one('svg > text.percentage').get_text()[ : -1 ])
+            msg[m] = info
+        else:
+            ERROR_USERS        += [ m ]
 
     return json.dumps(msg, indent=4)
 
