@@ -19,6 +19,8 @@ def simplified():
         info = infos[user]
         msg += [ f"{user:11s} : {info['tier']:9s} ({info['percentage']:02d}%) {info['solved']:3d}" ]
 
+    if not len(ERROR_USERS):
+        return '\n'.join(msg)
     return '\n'.join(msg) + f'\n[*] An Error Occured on "{", ".join(ERROR_USERS)}"'
 
 
