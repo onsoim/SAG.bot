@@ -19,8 +19,8 @@ def main():
         channel = client.get_channel(channel_id)
 
         import bot_discord
-        event = '뿌링클 이벤트 진행중~! 플래티넘 달성하세요'
-        msg = f'```js\n[{date.today()}]\n{event}\n{bot_discord.run()}\n```'
+        # event = '뿌링클 이벤트 진행중~! 플래티넘 달성하세요'
+        msg = f'```js\n[{date.today()}]\n{bot_discord.run()}\n```'
         print(msg)
 
         for index in range(0, len(msg), 2000):
