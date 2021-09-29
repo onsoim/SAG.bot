@@ -39,7 +39,7 @@ def formatted():
             soup                = BeautifulSoup(res.text, 'html.parser')
             info['tier']        = soup.select_one('svg > text.tier-text').get_text()
             info['rate']        = int(soup.select_one('svg > g:nth-child(6) > text.rate.value').get_text().replace(',', ''))
-            info['solved']      = int(soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text())
+            info['solved']      = int(soup.select_one('svg > g:nth-child(7) > text.solved.value').get_text().replace(',', ''))
             info['class']       = soup.select_one('svg > g:nth-child(8) > text.class.value').get_text()
             info['percentage']  = int(soup.select_one('svg > text.percentage').get_text()[ : -1 ])
             msg[m] = info
