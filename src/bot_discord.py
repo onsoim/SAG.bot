@@ -17,7 +17,7 @@ def simplified():
 
     for user in infos.keys():
         info = infos[user]
-        msg += [ f"{user:11s} : {info['tier']:9s} ({info['percentage']:02d}%) {info['solved']:3d}" ]
+        msg += [ f"{user:12s} : {info['tier']:9s} ({info['percentage']:02d}%) {info['solved']:4d}" ]
 
     if not len(ERROR_USERS):
         return '\n'.join(msg)
