@@ -1,7 +1,10 @@
+
 from bs4 import BeautifulSoup
-import config
+
 import json
 import requests
+
+import config
 
 
 ERROR_USERS = []
