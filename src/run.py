@@ -1,8 +1,10 @@
 
-from datetime import date
+from datetime   import date
 
-import config
 import discord
+
+import bot_discord
+import config
 
 
 def main():
@@ -22,8 +24,6 @@ def main():
             else: continue
         channel = client.get_channel(channel_id)
 
-        import bot_discord
-        # event = '뿌링클 이벤트 진행중~! 플래티넘 달성하세요'
         msg = f'```js\n[{date.today()}]\n{bot_discord.run()}\n```'
         print(msg)
 
