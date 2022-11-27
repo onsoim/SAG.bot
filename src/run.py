@@ -32,7 +32,9 @@ def main():
         for index in range(0, len(msg), 2000):
             await channel.send(msg[ index : index + 2000 ])
 
-        exit(0)
+    @bot.command()
+    async def ping(ctx):
+        await ctx.send(f'pong! {round(round(bot.latency, 4) * 1000)}ms')
 
     bot.run(config.DISCORD_TOKEN)
 
