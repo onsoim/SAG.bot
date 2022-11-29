@@ -8,6 +8,6 @@ do
     sleep 1
 done
 
-python3 -u src/run.py >> log/$(date +"%Y-%m-%d").log &
+python3 -u src/__main__.py >> log/$(date +"%Y-%m-%d").log &
 
 /bin/sh
