@@ -4,10 +4,17 @@ from discord.ext    import commands
 
 import asyncio
 import discord
+import os
 
 import bot_discord
 import config
 
+
+async def load_extensions():
+    cogs_foldername = 'discord_cogs'
+    for filename in os.listdir(f'src/{cogs_foldername}'):
+        if filename.endswith(".py"):
+            await bot.load_extension(f'{cogs_foldername}.{filename[:-3]}')
 
 bot = commands.Bot(
     command_prefix = '/',
@@ -38,6 +45,7 @@ async def main():
         async def ping(ctx):
             await ctx.send(f'pong! {round(round(bot.latency, 4) * 1000)}ms')
 
+        await load_extensions()
         await bot.start(config.DISCORD_TOKEN)
 
 asyncio.run(main())
