@@ -17,7 +17,7 @@ async def load_extensions():
             await bot.load_extension(f'{cogs_foldername}.{filename[:-3]}')
 
 bot = commands.Bot(
-    command_prefix = '/',
+    command_prefix = '',
     intents = discord.Intents.all()
 )
 
@@ -41,7 +41,13 @@ async def main():
             for index in range(0, len(msg), 2000):
                 await channel.send(msg[ index : index + 2000 ])
 
-        @bot.command()
+        # @bot.event
+        # async def on_message(message):
+        #     await print(f'{message.author} (__main__)\n=> {message.content}')
+
+        @bot.command(aliases = [
+            f'{prefix}ping' for prefix in ['/', '!', '.', '?']
+        ])
         async def ping(ctx):
             await ctx.send(f'pong! {round(round(bot.latency, 4) * 1000)}ms')
 
