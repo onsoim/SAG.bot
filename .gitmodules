@@ -1,0 +1,3 @@
+[submodule "src/discord_cogs"]
+	path = src/discord_cogs
+	url = https://github.com/onsoim/discord.cogs
