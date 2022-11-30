@@ -1,57 +1,54 @@
 
-from datetime       import date
-from discord.ext    import commands
+from datetime               import date
+from discord                import Intents
+from discord.ext.commands   import Bot
 
 import asyncio
-import discord
 import os
 
 import bot_discord
 import config
 
 
-async def load_extensions():
-    cogs_foldername = 'discord_cogs'
-    for filename in os.listdir(f'src/{cogs_foldername}'):
-        if filename.endswith(".py"):
-            await bot.load_extension(f'{cogs_foldername}.{filename[:-3]}')
+class SAG(Bot):
+    def __init__(self, *args, **kwargs):
+        # super().__init__(
+        #   command_prefix = '',
+        #   intents = discord.Intents.all()
+        # )
+        super().__init__(*args, **kwargs)
 
-bot = commands.Bot(
-    command_prefix = '',
-    intents = discord.Intents.all()
-)
+    async def load_extensions(self, cogs):
+        for filename in os.listdir(f'./src/{cogs}'):
+            if filename.endswith(".py"):
+                await self.load_extension(f'{cogs}.{filename[:-3]}')
+
+    async def on_ready(self):
+        channel_id = 0
+        for guild in self.guilds:
+            if guild.name == config.DISCORD_GUILD_NAME:
+                for channel in guild.channels:
+                    if channel.name == config.DISCORD_CHANNEL_NAME:
+                        channel_id = channel.id
+                        break
+            else: continue
+        channel = self.get_channel(channel_id)
+
+        msg = f'```js\n[{date.today()}]\n{bot_discord.run()}\n```'
+        print(msg)
+
+        for index in range(0, len(msg), 2000):
+            await channel.send(msg[ index : index + 2000 ])
+
 
 async def main():
-    async with bot:
-        @bot.event
-        async def on_ready():
-            channel_id = 0
-            for guild in bot.guilds:
-                if guild.name == config.DISCORD_GUILD_NAME:
-                    for channel in guild.channels:
-                        if channel.name == config.DISCORD_CHANNEL_NAME:
-                            channel_id = channel.id
-                            break
-                else: continue
-            channel = bot.get_channel(channel_id)
+    bot = SAG(
+        command_prefix = '',
+        intents = Intents.all()
+    )
 
-            msg = f'```js\n[{date.today()}]\n{bot_discord.run()}\n```'
-            print(msg)
+    await bot.load_extensions('discord_cogs')
+    await bot.start(config.DISCORD_TOKEN)
 
-            for index in range(0, len(msg), 2000):
-                await channel.send(msg[ index : index + 2000 ])
-
-        # @bot.event
-        # async def on_message(message):
-        #     await print(f'{message.author} (__main__)\n=> {message.content}')
-
-        @bot.command(aliases = [
-            f'{prefix}ping' for prefix in ['/', '!', '.', '?']
-        ])
-        async def ping(ctx):
-            await ctx.send(f'pong! {round(round(bot.latency, 4) * 1000)}ms')
-
-        await load_extensions()
-        await bot.start(config.DISCORD_TOKEN)
-
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
