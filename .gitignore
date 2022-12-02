@@ -4,4 +4,5 @@
 
 # to avoid project become heavy
 *.log
+*.mp4
 *.tar.gz
