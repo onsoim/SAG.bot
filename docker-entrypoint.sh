@@ -2,6 +2,8 @@
 
 tor >> log/$(date +"%Y-%m-%d")_tor.log &
 
+git pull
+
 # curl --socks5-hostname localhost:9050 ifconfig.me
 while [ `netstat -ant | grep 9050 | wc -l` -eq 0 ]
 do
