@@ -12,10 +12,6 @@ import config
 
 class SAG(Bot):
     def __init__(self, *args, **kwargs):
-        # super().__init__(
-        #   command_prefix = '',
-        #   intents = discord.Intents.all()
-        # )
         super().__init__(*args, **kwargs)
 
     async def load_extensions(self, cogs):
@@ -48,6 +44,8 @@ async def main():
     )
 
     await bot.load_extensions('discord_cogs')
+    await bot.load_extensions('cogs')
+
     await bot.start(config.DISCORD_TOKEN)
 
 if __name__ == "__main__":
