@@ -25,12 +25,13 @@ class Regulation(Cog):
 
                 if message.author.id not in self.tier:
                     try:
+                        timeout = 10 + randint(0, 20)
                         await message.channel.send(
-                            "등급이 너무 낮습니다. 등급 올려주세요.",
+                            f"등급이 너무 낮습니다. 등급 올려주세요.\nSAG 규정에 따라 {timeout}분 채금 조치합니다. 이의가 있는 경우 다이아에게 문의하세요.",
                             reference = message
                         )
                         await message.author.edit(
-                            timed_out_until = datetime.now().astimezone() + timedelta(minutes=10 + randint(0, 20))
+                            timed_out_until = datetime.now().astimezone() + timedelta(minutes=timeout)
                         )
                     except Exception as e:
                         await print(f'[*] {e} => {message.content}\n{message}')
