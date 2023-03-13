@@ -1,6 +1,7 @@
 
 from datetime               import datetime, timedelta
 from discord.ext.commands   import Cog
+from random                 import randint
 
 import json
 
@@ -29,7 +30,7 @@ class Regulation(Cog):
                             reference = message
                         )
                         await message.author.edit(
-                            timed_out_until = datetime.now().astimezone() + timedelta(minutes=10)
+                            timed_out_until = datetime.now().astimezone() + timedelta(minutes=10 + randint(0, 20))
                         )
                     except Exception as e:
                         await print(f'[*] {e} => {message.content}\n{message}')
