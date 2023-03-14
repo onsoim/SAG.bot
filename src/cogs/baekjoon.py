@@ -1,14 +1,17 @@
 
-from bs4 import BeautifulSoup
+from bs4                    import BeautifulSoup
+from datetime               import date
+from discord.ext.commands   import Cog
 
 import json
 import requests
 
+import sys
+sys.path.append('../')
 import config
 
 
 ERROR_USERS = []
-
 
 def simplified():
     infos = dict(sorted(
@@ -58,3 +61,31 @@ def run():
 
 if __name__ == "__main__":
     print(run())
+
+
+class Baekjoon(Cog):
+    def __init__(self, bot):
+        print('init baekjoon cog')
+        self.bot    = bot
+
+    @Cog.listener()
+    async def on_ready(self):
+        channel_id = 0
+        for guild in self.bot.guilds:
+            if guild.name == config.DISCORD_GUILD_NAME:
+                for channel in guild.channels:
+                    if channel.name == config.DISCORD_CHANNEL_NAME:
+                        channel_id = channel.id
+                        break
+            else: continue
+        channel = self.bot.get_channel(channel_id)
+
+        msg = f'```js\n[{date.today()}]\n{run()}\n```'
+        print(msg)
+
+        for index in range(0, len(msg), 2000):
+            await channel.send(msg[ index : index + 2000 ])
+
+
+async def setup(bot):
+    await bot.add_cog(Baekjoon(bot))

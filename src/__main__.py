@@ -6,7 +6,6 @@ from discord.ext.commands   import Bot
 import asyncio
 import os
 
-import bot_discord
 import config
 
 
@@ -18,23 +17,6 @@ class SAG(Bot):
         for filename in os.listdir(f'./src/{cogs}'):
             if filename.endswith(".py"):
                 await self.load_extension(f'{cogs}.{filename[:-3]}')
-
-    async def on_ready(self):
-        channel_id = 0
-        for guild in self.guilds:
-            if guild.name == config.DISCORD_GUILD_NAME:
-                for channel in guild.channels:
-                    if channel.name == config.DISCORD_CHANNEL_NAME:
-                        channel_id = channel.id
-                        break
-            else: continue
-        channel = self.get_channel(channel_id)
-
-        msg = f'```js\n[{date.today()}]\n{bot_discord.run()}\n```'
-        print(msg)
-
-        for index in range(0, len(msg), 2000):
-            await channel.send(msg[ index : index + 2000 ])
 
 
 async def main():
