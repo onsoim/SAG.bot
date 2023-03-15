@@ -34,9 +34,10 @@ def formatted():
     global ERROR_USERS
     
     with open("res/users.json", "r") as f: users = json.load(f)
+    regulate = {}
 
     msg = {}
-    for m in users['ADMINs'] + users['MEMBERs']:
+    for m in users.keys() :
         info    = {}
         url     = f'{config.URL_API}?boj={m}'
         res     = requests.get(url)
@@ -49,8 +50,20 @@ def formatted():
             info['class']       = soup.select_one('svg > g:nth-child(8) > text.class.value').get_text()
             info['percentage']  = int(soup.select_one('svg > text.percentage').get_text()[ : -1 ])
             msg[m] = info
+
+            if info['rate'] >= 1600:
+                regulate[users[m]] = 10
+            elif info['rate'] >= 1250:
+                regulate[users[m]] = 3
+            else:
+                regulate[users[m]] = 2
+
         else:
             ERROR_USERS        += [ m ]
+            regulate[users[m]] = 10
+
+    with open("data/regulation.json", "w") as f:
+        json.dump(regulate, f, indent=4)
 
     return json.dumps(msg, indent=4)
 
