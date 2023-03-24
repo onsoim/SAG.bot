@@ -39,6 +39,8 @@ class Baekjoon(Cog):
         regulate    = {}
         ERROR_USERS = []
 
+        MAX_LINEs   = 100
+
         with open("res/users.json", "r") as f: users = json.load(f)
 
         for m in users.keys() :
@@ -55,7 +57,7 @@ class Baekjoon(Cog):
                 infos[m] = info
 
                 if info['rate'] >= 1600:
-                    regulate[users[m]] = 10
+                    regulate[users[m]] = MAX_LINEs
                 elif info['rate'] >= 1250:
                     regulate[users[m]] = 3
                 else:
@@ -63,7 +65,7 @@ class Baekjoon(Cog):
 
             else:
                 ERROR_USERS        += [ m ]
-                regulate[users[m]] = 10
+                regulate[users[m]] = MAX_LINEs
 
         with open("data/regulation.json", "w") as f:
             json.dump(regulate, f, indent=4)
