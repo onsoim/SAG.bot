@@ -24,7 +24,7 @@ class Regulation(Cog):
         aID = str(message.author.id)
         cID = message.channel.id
 
-        if cID in self.regulate.keys() and aID == self.regulate[cID]["prev_id"]:
+        if cID in self.regulate.keys() and aID == self.regulate[cID]["prev_id"] and datetime.now().astimezone() < self.regulate[cID]["until"]:
             if self.regulate[cID]["cnt"] == (self.tier[aID] if aID in self.tier.keys() else 2):
                 self.regulate[cID]["cnt"] = -1
 
@@ -45,6 +45,7 @@ class Regulation(Cog):
             self.regulate[cID] = {
                 "prev_id"   : aID,
                 "cnt"       : 1,
+                "until"     : datetime.now().astimezone() + timedelta(minutes=1),
             }
 
         await self.bot.process_commands(message)
