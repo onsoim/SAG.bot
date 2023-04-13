@@ -33,7 +33,7 @@ class Regulation(Cog):
             aID = str(message.author.id)
             cID = message.channel.id
 
-            if cID in self.regulate.keys() and aID == self.regulate[cID]["prev_id"] and datetime.now().astimezone() < self.regulate[cID]["until"]:
+            if cID in self.regulate.keys() and aID == self.regulate[cID]["prev_id"] and self.now() < self.regulate[cID]["until"]:
                 if self.regulate[cID]["cnt"] == (self.tier[aID] if aID in self.tier.keys() else 2):
                     self.regulate[cID]["cnt"] = -1
 
@@ -44,14 +44,17 @@ class Regulation(Cog):
                 self.regulate[cID] = {
                     "prev_id"   : aID,
                     "cnt"       : 1,
-                    "until"     : datetime.now().astimezone() + timedelta(minutes=1),
+                    "until"     : self.now(1),
                 }
 
         await self.bot.process_commands(message)
 
+    def now(self, minutes = 0):
+        return datetime.now().astimezone() + timedelta(minutes=minutes)
+
     async def timeout(self, message, minutes = 0, msg = ""):
         if not minutes:
-            seed(datetime.now())
+            seed(self.now())
             minutes = 10 + randint(0, 20)
 
         try:
@@ -61,7 +64,7 @@ class Regulation(Cog):
             )
 
             await message.author.edit(
-                timed_out_until = datetime.now().astimezone() + timedelta(minutes=minutes)
+                timed_out_until = self.now(minutes)
             )
         except Exception as e:
             print(f'[*] {e} => {message.content}\n{message}')
