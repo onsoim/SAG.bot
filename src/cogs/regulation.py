@@ -1,24 +1,28 @@
 
 from datetime               import datetime, timedelta
-from discord.ext.commands   import Cog
+from discord.ext.commands   import Cog, command
 from random                 import sample, randint, seed
 
 import json
+import os
 
 
 class Regulation(Cog):
+    prefixes = ['/', '!', '.', '?']
+
     def __init__(self, bot):
         print('init regulation cog')
         self.bot        = bot
         self.regulate   = {}
 
-        keywords = []
-        with open("data/keywords.json", "r") as j:
-            for _ in json.load(j).values():
-                keywords += _
+        self.pData = "data/keywords.json"
+        if os.path.exists(self.pData):
+            with open(self.pData, "r") as j:
+                self.jKeywords = json.load(j)
+        else:   self.jKeywords = { "init": [ "출근", "재택", "대기업" ] }
 
         self.keywords   = sample(
-            keywords,
+            list(set([ _ for kw in self.jKeywords.values() for _ in kw ])),
             k = 3
         )
         print(self.keywords)
@@ -79,6 +83,29 @@ class Regulation(Cog):
             )
         except Exception as e:
             print(f'[*] {e} => {message.content}\n{message}')
+
+    @command( aliases = [ f'{prefix}kadd' for prefix in prefixes ] )
+    async def kadd(self, ctx, keyword):
+        aID = str(ctx.author.id)
+
+        if aID not in self.jKeywords:
+            if self.tier[aID] > 10:
+                self.jKeywords[aID] = [ keyword ]
+        elif keyword not in self.jKeywords[aID]:
+            self.jKeywords[aID] += [ keyword ]
+
+            with open(self.pData, "w") as f:
+                json.dump(self.jKeywords, f, indent = 4)
+
+    @command( aliases = [ f'{prefix}kdel' for prefix in prefixes ] )
+    async def kdel(self, ctx, keyword):
+        aID = str(ctx.author.id)
+
+        if aID in self.jKeywords and keyword in self.jKeywords[aID]:
+            self.jKeywords[aID].remove(keyword)
+
+            with open(self.pData, "w") as f:
+                json.dump(self.jKeywords, f, indent = 4)
 
 
 async def setup(bot):
