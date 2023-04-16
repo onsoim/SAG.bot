@@ -1,7 +1,7 @@
 
 from datetime               import datetime, timedelta
 from discord.ext.commands   import Cog
-from random                 import randint, seed
+from random                 import sample, randint, seed
 
 import json
 
@@ -12,7 +12,16 @@ class Regulation(Cog):
         self.bot        = bot
         self.regulate   = {}
 
-        self.keywords   = ["금융", "대기업", "재택"]
+        keywords = []
+        with open("data/keywords.json", "r") as j:
+            for _ in json.load(j).values():
+                keywords += _
+
+        self.keywords   = sample(
+            keywords,
+            k = 3
+        )
+        print(self.keywords)
 
     @Cog.listener()
     async def on_ready(self):
@@ -25,8 +34,8 @@ class Regulation(Cog):
 
         # regulation of keywords
         msg = message.content.replace(" ", "")
-        if any(keyword in msg for keyword in self.keywords):
-            await self.timeout(message)
+        cnt = sum(keyword in msg for keyword in self.keywords)
+        if cnt: await self.timeout(message, iter = cnt)
 
         # regulation of lines
         else:
@@ -52,10 +61,12 @@ class Regulation(Cog):
     def now(self, minutes = 0):
         return datetime.now().astimezone() + timedelta(minutes=minutes)
 
-    async def timeout(self, message, minutes = 0, msg = ""):
+    async def timeout(self, message, minutes = 0, iter = 1, msg = ""):
         if not minutes:
             seed(self.now())
-            minutes = 10 + randint(0, 20)
+            minutes = 10
+            for _ in range(iter):
+                minutes += randint(0, 20)
 
         try:
             await message.channel.send(
