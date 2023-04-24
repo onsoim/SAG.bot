@@ -39,7 +39,9 @@ class Regulation(Cog):
         # regulation of keywords
         msg = message.content.replace(" ", "")
         cnt = sum(keyword in msg for keyword in self.keywords)
-        if cnt and self.tier[aID] < 100: await self.timeout(message, iter = cnt)
+        if cnt:
+            if self.tier[aID] < 100:
+                await self.timeout(message, iter = cnt)
 
         # regulation of lines
         else:
