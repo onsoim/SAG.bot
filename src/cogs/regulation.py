@@ -1,6 +1,7 @@
 
-from datetime               import datetime, timedelta
+from datetime               import datetime, time, timedelta
 from discord.ext.commands   import Cog, command
+from discord.ext.tasks      import loop
 from random                 import sample, randint, seed
 
 import json
@@ -26,6 +27,7 @@ class Regulation(Cog):
             k = 3
         )
         print(self.keywords)
+        self.revealKeywords.start()
 
     @Cog.listener()
     async def on_ready(self):
@@ -108,6 +110,10 @@ class Regulation(Cog):
 
             with open(self.pData, "w") as f:
                 json.dump(self.jKeywords, f, indent = 4)
+
+    @loop(time = time(tzinfo=now.tzinfo))
+    async def revealKeywords(self):
+        await self.bot.get_channel(968372280528883712).send(f'오늘의 키워드\n{self.keywords}')
 
 
 async def setup(bot):
