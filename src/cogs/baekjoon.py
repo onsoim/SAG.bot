@@ -1,7 +1,8 @@
 
 from bs4                    import BeautifulSoup
-from datetime               import date
+from datetime               import date, datetime, time
 from discord.ext.commands   import Cog
+from discord.ext.tasks      import loop
 
 import json
 import requests
@@ -16,8 +17,10 @@ class Baekjoon(Cog):
         print('init baekjoon cog')
         self.bot    = bot
 
-    @Cog.listener()
-    async def on_ready(self):
+        self.dailyReport.start()
+
+    @loop(time = time(hour=9, tzinfo=datetime.now().astimezone().tzinfo))
+    async def dailyReport(self):
         channel_id = 0
         for guild in self.bot.guilds:
             if guild.name == config.DISCORD_GUILD_NAME:
