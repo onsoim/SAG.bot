@@ -111,7 +111,7 @@ class Regulation(Cog):
             with open(self.pData, "w") as f:
                 json.dump(self.jKeywords, f, indent = 4)
 
-    @loop(time = time(tzinfo=now.tzinfo))
+    @loop(time = time(tzinfo=datetime.now().astimezone().tzinfo))
     async def revealKeywords(self):
         await self.bot.get_channel(968372280528883712).send(f'오늘의 키워드\n{self.keywords}')
 
