@@ -41,13 +41,14 @@ class Regulation(Cog):
         # regulation of keywords
         msg = message.content.replace(" ", "")
         cnt = sum(keyword in msg for keyword in self.keywords)
+
+        aID = str(message.author.id)
         if cnt:
-            if self.tier[aID] < 100:
+            if aID not in self.tier or self.tier[aID] < 100:
                 await self.timeout(message, iter = cnt)
 
         # regulation of lines
         else:
-            aID = str(message.author.id)
             cID = message.channel.id
 
             if cID in self.regulate.keys() and aID == self.regulate[cID]["prev_id"] and self.now() < self.regulate[cID]["until"]:
