@@ -45,7 +45,7 @@ class Regulation(Cog):
         aID = str(message.author.id)
         if cnt:
             if aID not in self.tier or self.tier[aID] < 100:
-                await self.timeout(message, iter = cnt)
+                await self.timeout(message, iter = cnt, msg = "```scss\n[키워드] 오늘의 키워드가 포함되어 있습니다.\n```\n")
 
         # regulation of lines
         else:
@@ -55,7 +55,7 @@ class Regulation(Cog):
                 if self.regulate[cID]["cnt"] == (self.tier[aID] if aID in self.tier.keys() else 2):
                     self.regulate[cID]["cnt"] = -1
 
-                    await self.timeout(message, msg = "등급이 너무 낮습니다. 등급 올려주세요.\n")
+                    await self.timeout(message, msg = "```scss\n[등급]이 너무 낮습니다. 등급을 올려주세요.\n```\n")
 
                 self.regulate[cID]["cnt"] += 1
             else:
