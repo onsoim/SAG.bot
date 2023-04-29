@@ -14,7 +14,7 @@ class Regulation(Cog):
     def __init__(self, bot):
         print('init regulation cog')
         self.bot        = bot
-        self.regulate   = {}
+        self.regulate   = { "prev_id"   : -1 }
 
         self.pData = "data/keywords.json"
         if os.path.exists(self.pData):
@@ -31,7 +31,8 @@ class Regulation(Cog):
 
     @Cog.listener()
     async def on_ready(self):
-        with open("data/regulation.json", "r") as j: self.tier = json.load(j)
+        with open("data/regulation.json", "r")  as j: self.tier     = json.load(j)
+        with open("res/Channels.json", "r")     as j: self.channel  = json.load(j)
 
     @Cog.listener()
     async def on_message(self, message):
@@ -47,19 +48,17 @@ class Regulation(Cog):
             if aID not in self.tier or self.tier[aID] < 100:
                 await self.timeout(message, iter = cnt, msg = "```scss\n[키워드] 오늘의 키워드가 포함되어 있습니다.\n```\n")
 
-        # regulation of lines
-        else:
-            cID = message.channel.id
-
-            if cID in self.regulate.keys() and aID == self.regulate[cID]["prev_id"] and self.now() < self.regulate[cID]["until"]:
-                if self.regulate[cID]["cnt"] == (self.tier[aID] if aID in self.tier.keys() else 2):
-                    self.regulate[cID]["cnt"] = -1
+        # regulation of lines on targeted channel
+        elif message.channel.id == self.channel['채팅']:
+            if aID == self.regulate["prev_id"] and self.now() < self.regulate["until"]:
+                if self.regulate["cnt"] == (self.tier[aID] if aID in self.tier.keys() else 2):
+                    self.regulate["cnt"] = -1
 
                     await self.timeout(message, msg = "```scss\n[등급]이 너무 낮습니다. 등급을 올려주세요.\n```\n")
 
-                self.regulate[cID]["cnt"] += 1
+                self.regulate["cnt"] += 1
             else:
-                self.regulate[cID] = {
+                self.regulate = {
                     "prev_id"   : aID,
                     "cnt"       : 1,
                     "until"     : self.now(1),
