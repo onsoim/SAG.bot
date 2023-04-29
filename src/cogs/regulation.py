@@ -46,7 +46,7 @@ class Regulation(Cog):
         aID = str(message.author.id)
         if cnt:
             if aID not in self.tier or self.tier[aID] < 100:
-                await self.timeout(message, iter = cnt, msg = "```scss\n[키워드] 오늘의 키워드가 포함되어 있습니다.\n```\n")
+                await self.timeout(message, msg = "```scss\n[키워드] 오늘의 키워드가 포함되어 있습니다.\n```\n")
 
         # regulation of lines on targeted channel
         elif message.channel.id == self.channel['채팅']:
@@ -54,7 +54,7 @@ class Regulation(Cog):
                 if self.regulate["cnt"] == (self.tier[aID] if aID in self.tier.keys() else 2):
                     self.regulate["cnt"] = -1
 
-                    await self.timeout(message, msg = "```scss\n[등급]이 너무 낮습니다. 등급을 올려주세요.\n```\n")
+                    await self.timeout(message, rand = True, msg = "```scss\n[등급]이 너무 낮습니다. 등급을 올려주세요.\n```\n")
 
                 self.regulate["cnt"] += 1
             else:
@@ -69,12 +69,11 @@ class Regulation(Cog):
     def now(self, minutes = 0):
         return datetime.now().astimezone() + timedelta(minutes=minutes)
 
-    async def timeout(self, message, minutes = 0, iter = 1, msg = ""):
-        if not minutes:
+    async def timeout(self, message, min = 1, max = 5, rand = False, msg = ""):
+        if rand:
             seed(self.now())
-            minutes = 10
-            for _ in range(iter):
-                minutes += randint(0, 20)
+            minutes = randint(min, max)
+        else: minutes = max
 
         try:
             await message.channel.send(
