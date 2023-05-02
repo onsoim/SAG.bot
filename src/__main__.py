@@ -13,6 +13,9 @@ class SAG(Bot):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
+    async def on_ready(self):
+        print("Bot is ready")
+
     async def load_extensions(self, cogs):
         for filename in os.listdir(f'./src/{cogs}'):
             if filename.endswith(".py"):
