@@ -32,7 +32,7 @@ class Regulation(Cog):
     @Cog.listener()
     async def on_ready(self):
         with open("data/regulation.json", "r")  as j: self.tier     = json.load(j)
-        with open("res/Channels.json", "r")     as j: self.channel  = json.load(j)
+        with open("res/channels.json", "r")     as j: self.channel  = json.load(j)
 
     @Cog.listener()
     async def on_message(self, message):
