@@ -1,4 +1,5 @@
 
+from datetime               import datetime
 from discord                import Color, Embed
 from discord.ext.commands   import Cog
 from json                   import load
@@ -42,8 +43,9 @@ class Surveillance(Cog):
 
     def embed(self, message, description = None, color = None):
         return Embed(
-            description = description,
-            color = color
+            description = f"**{description}**",
+            color = color,
+            timestamp = datetime.now().astimezone()
         ).set_author(
             name = message.author,
             icon_url = message.author.avatar or "https://cdn.discordapp.com/embed/avatars/0.png"
