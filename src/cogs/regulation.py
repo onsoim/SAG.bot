@@ -112,7 +112,7 @@ class Regulation(Cog):
 
     @loop(time = time(tzinfo=datetime.now().astimezone().tzinfo))
     async def revealKeywords(self):
-        await self.bot.get_channel(968372280528883712).send(f'오늘의 키워드\n{self.keywords}')
+        await self.bot.get_channel(self.channel['일일보고']).send(f'오늘의 키워드\n{self.keywords}')
 
 
 async def setup(bot):
